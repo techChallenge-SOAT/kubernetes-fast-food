@@ -1,40 +1,31 @@
-resource "aws_ecs_service" "service" {
-  name            = "SVC-${var.projectName}"
-  cluster         = aws_ecs_cluster.cluster.arn
-  task_definition = aws_ecs_task_definition.task.arn
+resource "aws_ecs_cluster" "backend-fast-food-cluster" {
+  name = "Cluster-${var.clusterName}"
+}
 
-  desired_count                      = 1
-  deployment_minimum_healthy_percent = 100
-  deployment_maximum_percent         = 200
+resource "aws_ecs_task_definition" "backend-fast-food-task" {
+  family                   = "Task-${var.projectName}"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  
+  container_definitions = jsonencode([{
+    name  = "${var.projectName}"
+    image = "jackienascimento/backend-fast-food:latest"
+    portMappings = [{
+      containerPort = 3000
+      hostPort      = 3000
+    }]
+  }])
+}
+
+resource "aws_ecs_service" "backend-fast-food-service" {
+  name            = "SVC-${var.projectName}"
+  cluster         = aws_ecs_cluster.backend-fast-food-cluster.id
+  task_definition = aws_ecs_task_definition.backend-fast-food-task.arn
+  launch_type     = "FARGATE"
+  desired_count   = 3
 
   network_configuration {
-    subnets          = ["${var.subnet01}", "${var.subnet02}", "${var.subnet03}"]
-    security_groups  = ["${aws_security_group.sg.id}"]
-    assign_public_ip = true
+    subnets = ["${var.subnet}"]
+    security_groups = ["${aws_security_group.backend-fast-food-sg.id}"]
   }
-
-  health_check_grace_period_seconds = 240
-
-  load_balancer {
-    target_group_arn = aws_lb_target_group.tg.arn
-    container_name   = var.projectName
-    container_port   = 9000
-  }
-
-  capacity_provider_strategy {
-    base              = 1
-    capacity_provider = "FARGATE"
-    weight            = 1
-  }
-
-  deployment_circuit_breaker {
-    enable   = true
-    rollback = true
-  }
-
-  deployment_controller {
-    type = "ECS"
-  }
-
-  depends_on = [aws_lb.alb]
 }
