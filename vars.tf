@@ -1,15 +1,19 @@
 variable "projectName" {
   default = "backend-fast-food"
- }
+}
  
- variable "clusterName" {
+variable "clusterName" {
   default = "BackendFastFood"
- }
+}
 
 variable "subnet" {
   default = "<inserir-subnet-id>"
- }
+}
  
- variable "vpcId" {
+variable "vpcId" {
   default = "<inserir-vpc-id>"
- }
+}
+
+variable "region" {
+  default = "<inserir-region>"
+}
