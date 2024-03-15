@@ -17,3 +17,7 @@ variable "vpcId" {
 variable "region" {
   default = "<inserir-region>"
 }
+
+variable "AWSAccount" {
+  default     = "<inserir-id-aws-account>"
+}
