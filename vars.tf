@@ -7,17 +7,17 @@ variable "clusterName" {
 }
 
 variable "subnet" {
-  default = "<inserir-subnet-id>"
+  default = "subnet-052bc7647ee2fadf0"
 }
  
 variable "vpcId" {
-  default = "<inserir-vpc-id>"
+  default = "vpc-0b8dd4f56f9ebc85f"
 }
 
 variable "region" {
-  default = "<inserir-region>"
+  default = "${ secrets.AWS_REGION }"
 }
 
 variable "AWSAccount" {
-  default     = "<inserir-id-aws-account>"
+  default = "${ secrets.AWS_ACCESS_KEY_ID }"
 }
