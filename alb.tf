@@ -16,7 +16,7 @@ resource "aws_lb_target_group" "backend-fast-food-tg" {
 resource "aws_lb_listener" "backend-fast-food-listener" {
   load_balancer_arn = aws_lb.backend-fast-food-lb.arn
   port              = 80
-  protocol          = "HTTP"
+  protocol          = "HTTPS"
 
   default_action {
     target_group_arn = aws_lb_target_group.backend-fast-food-tg.arn
